@@ -1,0 +1,21 @@
+/*     */ import java.awt.event.ActionEvent;
+/*     */ import java.awt.event.ActionListener;
+/*     */ 
+/*     */ class Calculations$4
+/*     */   implements ActionListener
+/*     */ {
+/*     */   Calculations$4(Calculations paramCalculations) {}
+/*     */   
+/*     */   public void actionPerformed(ActionEvent e)
+/*     */   {
+/* 135 */     Calculations.units = 10;
+/* 136 */     this.val$calc.initSArrayMillimeter10();
+/* 137 */     Calculations.access$0(true);
+/*     */   }
+/*     */ }
+
+
+/* Location:              /Users/Yi/Downloads/RunOff_DiffSoils.jar!/Calculations$4.class
+ * Java compiler version: 8 (52.0)
+ * JD-Core Version:       0.7.1
+ */

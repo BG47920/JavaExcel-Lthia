@@ -1,0 +1,342 @@
+ import java.awt.GridLayout;
+/*     */ import java.awt.event.ActionEvent;
+/*     */ import java.awt.event.ActionListener;
+/*     */ import java.awt.event.WindowEvent;
+/*     */ import java.io.BufferedReader;
+/*     */ import java.io.File;
+/*     */ import java.io.FileNotFoundException;
+/*     */ import java.io.FileReader;
+/*     */ import java.io.FileWriter;
+/*     */ import java.io.IOException;
+/*     */ import java.io.PrintStream;
+/*     */ import java.io.PrintWriter;
+/*     */ import java.util.ArrayList;
+/*     */ import javax.swing.JButton;
+/*     */ import javax.swing.JFrame;
+/*     */ import javax.swing.JLabel;
+/*     */ 
+/*     */ public class Calculations
+/*     */ {
+/*     */   private String station;
+/*     */   private String stationName;
+/*  59 */   public static int units = 1;
+/*     */   
+/*  63 */   private static boolean isUnitsSelected = false;
+/*  64 */   private final double[] cnArray = { 0.0D, 30.0D, 31.0D, 32.0D, 33.0D, 34.0D, 35.0D, 36.0D, 37.0D, 38.0D, 39.0D, 40.0D, 41.0D, 42.0D, 43.0D, 44.0D, 45.0D, 46.0D, 47.0D, 48.0D, 49.0D, 50.0D, 51.0D, 52.0D, 53.0D, 54.0D, 55.0D, 56.0D, 57.0D, 58.0D, 59.0D, 60.0D, 61.0D, 62.0D, 63.0D, 64.0D, 65.0D, 66.0D, 67.0D, 68.0D, 69.0D, 70.0D, 71.0D, 72.0D, 73.0D, 74.0D, 75.0D, 76.0D, 77.0D, 78.0D, 79.0D, 80.0D, 81.0D, 82.0D, 83.0D, 84.0D, 85.0D, 86.0D, 87.0D, 88.0D, 89.0D, 90.0D, 91.0D, 92.0D, 93.0D, 94.0D, 95.0D, 96.0D, 97.0D, 98.0D, 99.0D, 100.0D }; private double[] cnDry = new double[this.cnArray.length]; private double[] cnWet = new double[this.cnArray.length]; private double[] sArray = new double[this.cnArray.length];
+/*     */   
+/*     */ 
+/*     */   void initSArrayInch1()
+/*     */   {
+/*  75 */     for (int i = 0; i < this.sArray.length; i++) {
+/*  76 */       this.sArray[i] = (1000.0D / this.cnArray[i] - 10.0D);
+/*     */     }
+/*     */   }
+/*     */   
+/*     */   void initSArrayInch100()
+/*     */   {
+/*  82 */     for (int i = 0; i < this.sArray.length; i++) {
+/*  83 */       this.sArray[i] = (100000.0D / this.cnArray[i] - 1000.0D);
+/*     */     }
+/*     */   }
+/*     */   
+/*     */   void initSArrayMillimeter1()
+/*     */   {
+/*  89 */     for (int i = 0; i < this.sArray.length; i++) {
+/*  90 */       this.sArray[i] = (2540.0D / this.cnArray[i] - 25.4D);
+/*     */     }
+/*     */   }
+/*     */   
+/*     */   void initSArrayMillimeter10()
+/*     */   {
+/*  96 */     for (int i = 0; i < this.sArray.length; i++) {
+/*  97 */       this.sArray[i] = (25400.0D / this.cnArray[i] - 254.0D);
+/*     */     }
+/*     */   }
+/*     */   
+/*     */   public static void main(String[] args)
+/*     */   {
+/* 103 */     Calculations calc = new Calculations();
+/*     */     
+/* 105 */     JFrame frame = new JFrame("Runoff");
+/* 106 */     frame.setDefaultCloseOperation(3);
+/*     */     
+/* 108 */     JButton millimeters = new JButton("millimeter");
+/* 109 */     millimeters.addActionListener(new ActionListener() {
+/*     */       public void actionPerformed(ActionEvent e) {
+/* 111 */         Calculations.units = 1;
+/* 112 */         Calculations.this.initSArrayMillimeter1();
+/* 113 */         Calculations.isUnitsSelected = true;
+/*     */       }
+/* 115 */     });
+
+/* 116 */     JButton inches = new JButton("inch");
+/* 117 */     inches.addActionListener(new ActionListener() {
+/*     */       public void actionPerformed(ActionEvent e) {
+/* 119 */         Calculations.units = 1;
+				  Calculations.this.initSArrayInch1();
+/* 121 */         Calculations.isUnitsSelected = true;
+/*     */       }
+/* 123 */     });
+/* 124 */     JButton inches100th = new JButton("100th inch");
+/* 125 */     inches100th.addActionListener(new ActionListener() {
+/*     */       public void actionPerformed(ActionEvent e) {
+/* 127 */         Calculations.units = 100;
+/* 128 */         Calculations.this.initSArrayInch100();
+/* 129 */         Calculations.isUnitsSelected = true;
+/*     */       }
+/* 131 */     });
+/* 132 */     JButton millimeters10th = new JButton("10th millimeter");
+/* 133 */     millimeters10th.addActionListener(new ActionListener() {
+/*     */       public void actionPerformed(ActionEvent e) {
+/* 135 */         Calculations.units = 10;
+/* 136 */         Calculations.this.initSArrayMillimeter10();
+/* 137 */         Calculations.isUnitsSelected = true;
+/*     */       }
+/* 139 */     });
+/* 140 */     JLabel directions = new JLabel("Please select the input data's metric system");
+/* 141 */     JLabel emptyLabel = new JLabel();
+/* 142 */     frame.setLayout(new GridLayout(3, 2));
+/* 143 */     frame.add(directions);
+/* 144 */     frame.add(emptyLabel);
+/* 145 */     frame.add(millimeters);
+/* 146 */     frame.add(inches);
+/* 147 */     frame.add(inches100th);
+/* 148 */     frame.add(millimeters10th);
+/* 149 */     frame.pack();
+/* 150 */     frame.setVisible(true);
+/*     */     
+/* 152 */     while (!isUnitsSelected) {
+/* 153 */       //System.out.println("select units");
+/*     */     }
+/* 155 */     millimeters.setVisible(false);
+/* 156 */     inches.setVisible(false);
+/* 157 */     inches100th.setVisible(false);
+/* 158 */     millimeters10th.setVisible(false);
+/* 159 */     directions.setText("Please wait.. results in \"Results\" folder");
+/*     */  
+/* 165 */     long startTime = System.currentTimeMillis();
+/*     */     
+/* 171 */     ArrayList<Year> years = new ArrayList();
+/*     */     
+/* 173 */     File folder = new File(".");
+/*     */     
+			  System.out.println("select units")
+/* 176 */     File[] listOfFiles = folder.listFiles();
+/* 177 */     String[] csvFilePaths = new String[listOfFiles.length];
+/* 178 */     String[] csvFileNames = new String[listOfFiles.length];
+/* 179 */     int counter = 0;
+/*     */     
+/* 181 */     for (int i = 0; i < listOfFiles.length; i++) {
+/* 182 */       File file = listOfFiles[i];
+/* 183 */       if ((file.isFile()) && (file.getName().endsWith(".csv"))) {
+/* 184 */         years = calc.readData(file.getAbsolutePath());
+/* 185 */         csvFilePaths[counter] = file.getAbsolutePath();
+/* 186 */         csvFileNames[counter] = file.toString();
+				  System.out.println("select units");	
+/*     */       
+/* 190 */         calc.generateOutput(file.getName(), null, years);
+/* 191 */         counter++;
+/*     */       }
+/*     */     }
+/*     */     
+/* 199 */     long estimatedTime = System.currentTimeMillis() - startTime;
+/*     */     
+/* 201 */     System.out.println("Running time : " + estimatedTime + " seconds");
+/*     */     
+/* 203 */     frame.dispatchEvent(new WindowEvent(frame, 201));
+/*     */   }
+/*     */   
+/*     */ 
+/*     */   ArrayList<Year> readData(String filename)
+/*     */   {
+/* 209 */     ArrayList<Year> years = new ArrayList();
+/* 210 */     BufferedReader br = null;
+/* 211 */     String line = "";
+/*     */     
+/*     */     try
+/*     */     {
+/* 215 */       br = new BufferedReader(new FileReader(filename));
+/*     */       
+/* 217 */       line = br.readLine();
+/* 218 */       String[] columnHeaders = line.split(",");
+/*     */       
+/*     */ 
+/* 221 */       line = br.readLine();
+/* 222 */       String[] dataConstants = line.split(",");
+/* 223 */       int dateIndex = 0;
+/* 224 */       int prcpIndex = 0;
+/* 225 */       Year year = new Year();
+/*     */       
+/*     */ 
+/* 228 */       for (int i = 0; i < dataConstants.length; i++) {
+/* 229 */         if (columnHeaders[i].toLowerCase().equals("station")) {
+/* 230 */           this.station = dataConstants[i];
+/* 231 */         } else if (columnHeaders[i].toLowerCase().equals("station_name")) {
+/* 232 */           this.stationName = dataConstants[i];
+/* 233 */         } else if (columnHeaders[i].toLowerCase().equals("date")) {
+/* 234 */           dateIndex = i;
+/* 235 */           year.setYear(dataConstants[i].substring(0, 4));
+/* 236 */         } else if (columnHeaders[i].toLowerCase().equals("prcp")) {
+/* 237 */           prcpIndex = i;
+/* 238 */           year.addPRCP(Double.parseDouble(dataConstants[i]));
+/* 239 */           year.addObservedDays();
+/*     */         }
+/*     */       }
+/*     */       
+/*     */ 
+/* 244 */       while ((line = br.readLine()) != null)
+/*     */       {
+/* 246 */         String[] tokens = line.split(",");
+/* 247 */         if (!tokens[dateIndex].substring(0, 4).equals(year.getYear())) {
+/* 248 */           years.add(year);
+/* 249 */           year = new Year();
+/* 250 */           year.setYear(tokens[dateIndex].substring(0, 4));
+/*     */         }
+/* 252 */         year.addPRCP(Double.parseDouble(tokens[prcpIndex]));
+/* 253 */         year.addObservedDays();
+/*     */       }
+/*     */       
+/* 256 */       years.add(year);
+/*     */       
+/* 258 */       br.close();
+/*     */     }
+/*     */     catch (Exception e)
+/*     */     {
+/* 262 */       e.printStackTrace();
+/*     */     }
+/*     */     
+/*     */ 
+/* 266 */     return years;
+/*     */   }
+/*     */   
+/*     */ 
+/*     */   void generateOutput(String filename, String filePath, ArrayList<Year> years)
+/*     */   {
+/* 272 */     FileWriter write = null;
+/*     */     
+/*     */     try
+/*     */     {
+/* 283 */       System.out.println("filename: " + filename);
+/*     */       
+/*     */ 
+/* 286 */       CreateDir("Results");
+/* 287 */       write = new FileWriter("Results\\" + filename.substring(0, filename.indexOf(".")) + "q.txt");
+/*     */     } catch (FileNotFoundException e) {
+/* 289 */       e.printStackTrace();
+/*     */     } catch (IOException e) {
+/* 291 */       e.printStackTrace();
+/*     */     }
+/* 293 */     PrintWriter outf = new PrintWriter(write);
+/*     */     
+/*     */ 
+/*     */ 
+/* 297 */     outf.printf("%s\t", new Object[] { filename.substring(filename.indexOf("\\") + 1, filename.indexOf(".")) });
+/* 298 */     outf.printf("%s\t", new Object[] { this.station });
+/* 299 */     outf.printf("%s\t", new Object[] { this.stationName });
+/* 300 */     outf.printf("%s\t", new Object[] { "Version 1.0" });
+/* 301 */     outf.printf("ObservedYears:%d", new Object[] { Integer.valueOf(years.size()) });
+/* 302 */     outf.printf("\tDataUnits:mm%n", new Object[0]);
+/* 303 */     outf.printf("CNvalue", new Object[0]);
+/* 304 */     outf.print("\t\t");
+/*     */     
+/* 306 */     for (int i = 0; i < this.cnArray.length; i++)
+/*     */     {
+/* 308 */       if (this.cnArray[i] < 10.0D) {
+/* 309 */         outf.printf("CN00%.0f", new Object[] { Double.valueOf(this.cnArray[i]) });
+/* 310 */         outf.print("\t");
+/*     */       }
+/*     */       
+/* 313 */       if ((this.cnArray[i] >= 10.0D) && (this.cnArray[i] < 100.0D)) {
+/* 314 */         outf.printf("CN0%.0f", new Object[] { Double.valueOf(this.cnArray[i]) });
+/* 315 */         outf.print("\t");
+/*     */       }
+/*     */       
+/* 318 */       if ((this.cnArray[i] >= 100.0D) && (this.cnArray[i] < 1000.0D)) {
+/* 319 */         outf.printf("CN%.0f", new Object[] { Double.valueOf(this.cnArray[i]) });
+/* 320 */         outf.print("\t");
+/*     */       }
+/*     */     }
+/*     */     
+/* 324 */     outf.println();
+/*     */ 
+/*     */ 
+/* 365 */     for (int i = 0; i < years.size(); i++) {
+/* 366 */       outf.printf("Year: %.0f", new Object[] { Double.valueOf(Double.parseDouble(((Year)years.get(i)).getYear())) });
+/* 367 */       for (int j = 0; j < this.cnArray.length; j++)
+/*     */       {
+/* 369 */         ArrayList<Double> qValues = new ArrayList();
+/* 370 */         for (int k = 0; k < ((Year)years.get(i)).getObserveredDays(); k++) {
+/* 371 */           if (((Year)years.get(i)).getPRCP(k) >= 0.2D * this.sArray[j])
+/*     */           {
+/* 377 */             qValues.add(Double.valueOf(Math.pow(((Year)years.get(i)).getPRCP(k) - 0.2D * this.sArray[j], 2.0D) / (((Year)years.get(i)).getPRCP(k) + 0.8D * this.sArray[j])));
+/*     */           }
+/*     */         }
+/*     */      
+/* 383 */         double sum = 0.0D;
+/*     */   
+/* 387 */         for (int k = 0; k < qValues.size(); k++) {
+/* 388 */           sum += ((Double)qValues.get(k)).doubleValue();
+/*     */         }
+/*     */         
+/* 391 */         if (Double.isNaN(sum)) {
+/* 392 */           outf.printf("%8.2f", new Object[] { Double.valueOf(0.0D) });
+/*     */         } else {
+/* 394 */           outf.printf("%8.2f", new Object[] { Double.valueOf(sum) });
+/*     */         }
+/*     */       }
+/* 397 */       outf.println();
+/*     */     }
+/*     */    
+/*     */     try
+/*     */     {
+/* 421 */       write.close();
+/*     */     }
+/*     */     catch (IOException e) {
+/* 424 */       e.printStackTrace();
+/*     */     }
+/* 426 */     outf.close();
+/*     */   }
+/*     */ 
+/*     */   void CreateDir(String dirAddress)
+/*     */   {
+/* 433 */     File theDir = new File(dirAddress);
+/*     */     
+/*     */ 
+/* 436 */     if (!theDir.exists()) {
+/* 437 */       System.out.println("creating directory: " + dirAddress);
+/* 438 */       boolean result = false;
+/*     */       try
+/*     */       {
+/* 441 */         theDir.mkdir();
+/* 442 */         result = true;
+/*     */       }
+/*     */       catch (SecurityException localSecurityException) {}
+/*     */       
+/* 446 */       if (result) {
+/* 447 */         System.out.println("DIR created");
+/*     */       }
+/*     */     }
+/*     */   }
+/*     */   
+/*     */   void initializeCNdry()
+/*     */   {
+/* 456 */     int i = 0;
+/* 457 */     for (i = 0; i < this.cnArray.length; i++) {
+/* 458 */       this.cnDry[i] = (0.39D * this.cnArray[i] * Math.exp(0.009D * this.cnArray[i]));
+/*     */     }
+/*     */   }
+/*     */   
+/*     */   void initializeCNwet()
+/*     */   {
+/* 466 */     int i = 0;
+/* 467 */     for (i = 0; i < this.cnArray.length; i++) {
+/* 468 */       this.cnWet[i] = (1.95D * this.cnArray[i] * Math.exp(-0.00663D * this.cnArray[i]));
+/*     */     }
+/*     */   }
+/*     */ }
+
+
+/* Location:              /Users/Yi/Downloads/RunOff_DiffSoils.jar!/Calculations.class
+ * Java compiler version: 8 (52.0)
+ * JD-Core Version:       0.7.1
+ */
